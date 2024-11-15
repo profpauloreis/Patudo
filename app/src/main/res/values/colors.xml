@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#FF2196F3</color>         <!-- Azul Material Design -->
+    <color name="colorPrimaryDark">#FF1976D2</color>     <!-- Azul escuro -->
+    <color name="colorAccent">#FF03DAC5</color>          <!-- Verde água -->
+
+    <color name="gray">#FF808080</color>
+    <color name="light_gray">#FFD3D3D3</color>
+</resources>
