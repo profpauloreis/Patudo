@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -38,6 +40,16 @@ class MainActivity : AppCompatActivity() {
             toolbar.inflateMenu(R.menu.menu_main)
         }
 
+        // mostrar o PopupMenu programaticamente
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_more -> {
+                    showPopupMenu(toolbar)
+                    true
+                }
+                else -> false
+            }
+        }
         carregarDados()
 
         binding.btnDadosCanino.setOnClickListener {
@@ -61,81 +73,37 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                // Ação para configurações
-                startActivity(Intent(this, ConfiguracaoActivity::class.java))
-                Toast.makeText(this, "Configurações", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            R.id.action_about -> {
-                // Ação para sobre
-                startActivity(Intent(this, SobreActivity::class.java))
-                Toast.makeText(this, "Sobre", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            R.id.action_logout -> {
-                // Ação para logout
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-                Toast.makeText(this, "Logout", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    //NAO FUNCIONA O TOOLBAR PARA EXIBIR OS ICONES E O ESTILO DO MENU
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_overflow -> {
-                showPopupMenu()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }*/
-
-    /*// Método para mostrar o PopupMenu
-    private fun showPopupMenu() {
-        val popupMenu = PopupMenu(this, findViewById(R.id.action_overflow))
-        popupMenu.menuInflater.inflate(R.menu.menu_main, popupMenu.menu)
-
-        // Remover o item "Mais opções" do PopupMenu
-        popupMenu.menu.removeItem(R.id.action_overflow)
-
+    private fun showPopupMenu(view: View) {
+        //val popupMenu = PopupMenu(this, view)
+        val popupMenu = PopupMenu(this, view, Gravity.END, 0, R.style.CustomPopupMenu)
+        popupMenu.menuInflater.inflate(R.menu.menu_more, popupMenu.menu)
+        popupMenu.setForceShowIcon(true)
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_settings -> {
                     // Ação para configurações
+                    Toast.makeText(this, "Configurações", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, ConfiguracaoActivity::class.java))
-                    Toast.makeText(this, "Configurações", Toast.LENGTH_LONG).show()
                     true
                 }
                 R.id.action_about -> {
                     // Ação para sobre
+                    Toast.makeText(this, "Sobre", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, SobreActivity::class.java))
-                    Toast.makeText(this, "Sobre", Toast.LENGTH_LONG).show()
                     true
                 }
                 R.id.action_logout -> {
                     // Ação para logout
+                    Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
-                    Toast.makeText(this, "Logout", Toast.LENGTH_LONG).show()
                     true
                 }
                 else -> false
             }
         }
-
         popupMenu.show()
-    }*/
-
+    }
 
     private fun carregarDados() {
         val sharedPreferences = this.getSharedPreferences("saude_canino", Context.MODE_PRIVATE)

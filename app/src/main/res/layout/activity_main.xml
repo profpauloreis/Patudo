@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/black"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -105,10 +106,10 @@
         android:layout_marginTop="25dp"
         android:layout_marginEnd="25dp"
         android:fontFamily="@font/lato"
+        android:padding="5dp"
         android:text="Próxima vacina a ..."
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iconInfo1"
         app:layout_constraintTop_toBottomOf="@id/avatar_image" />
@@ -131,10 +132,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25sp"
         android:fontFamily="@font/lato"
+        android:padding="5dp"
         android:text="Próxima medicação a ..."
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iconInfo2"
         app:layout_constraintTop_toBottomOf="@id/textVacina" />
@@ -157,10 +158,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25sp"
         android:fontFamily="@font/lato"
+        android:padding="5dp"
         android:text="Próxima proteção a ..."
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iconInfo3"
         app:layout_constraintTop_toBottomOf="@id/textMedicacao" />
@@ -183,21 +184,21 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25sp"
         android:fontFamily="@font/lato"
+        android:padding="5dp"
         android:text="Última estética a ..."
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iconInfo4"
         app:layout_constraintTop_toBottomOf="@id/textProtecao" />
 
     <View
+        android:id="@+id/linha"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@id/textGrooming"
-        android:id="@+id/linha"/>
+        app:layout_constraintTop_toBottomOf="@id/textGrooming" />
 
     <TextView
         android:id="@+id/textAnotacoes"

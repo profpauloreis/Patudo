@@ -126,7 +126,7 @@
             android:layout_marginBottom="16dp"
             android:textAlignment="center"
             android:fontFamily="@font/roboto_bold"
-            android:text="9/10"
+            android:text="9,5/10"
             android:textSize="36sp" />
 
     </LinearLayout>

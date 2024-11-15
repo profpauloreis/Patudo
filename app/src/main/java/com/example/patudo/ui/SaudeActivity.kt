@@ -5,14 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -42,8 +44,23 @@ class SaudeActivity : AppCompatActivity() {
         }
 
         // Configurar a Toolbar
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        val toolbar: Toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            it.setDisplayShowTitleEnabled(false)
+            toolbar.inflateMenu(R.menu.menu_main)
+        }
+
+        // mostrar o PopupMenu programaticamente
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_more -> {
+                    showPopupMenu(toolbar)
+                    true
+                }
+                else -> false
+            }
+        }
 
         setupInitialState()
         setupListeners()
@@ -92,33 +109,38 @@ class SaudeActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                // Ação para configurações
-                startActivity(Intent(this, ConfiguracaoActivity::class.java))
-                Toast.makeText(this, "Configurações", Toast.LENGTH_LONG).show()
-                true
+    private fun showPopupMenu(view: View) {
+        //val popupMenu = PopupMenu(this, view)
+        val popupMenu = PopupMenu(this, view, Gravity.END, 0, R.style.CustomPopupMenu)
+        popupMenu.menuInflater.inflate(R.menu.menu_more, popupMenu.menu)
+        popupMenu.setForceShowIcon(true)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_settings -> {
+                    // Ação para configurações
+                    Toast.makeText(this, "Configurações", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, ConfiguracaoActivity::class.java))
+                    true
+                }
+                R.id.action_about -> {
+                    // Ação para sobre
+                    Toast.makeText(this, "Sobre", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, SobreActivity::class.java))
+                    true
+                }
+                R.id.action_logout -> {
+                    // Ação para logout
+                    Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
             }
-
-            R.id.action_about -> {
-                // Ação para sobre
-                startActivity(Intent(this, SobreActivity::class.java))
-                Toast.makeText(this, "Sobre", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            R.id.action_logout -> {
-                // Ação para logout
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-                Toast.makeText(this, "Logout", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
         }
+        popupMenu.show()
     }
+
 
     private fun setupInitialState() {
         // Desativar edição inicialmente

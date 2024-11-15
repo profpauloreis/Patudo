@@ -4,13 +4,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -41,9 +44,24 @@ class ContatoDetalheActivity : AppCompatActivity() {
         }
 
         // Configurar a Toolbar
-        setSupportActionBar(binding.toolbar)
-        // Remover o título padrão
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        val toolbar: Toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            it.setDisplayShowTitleEnabled(false)
+            toolbar.inflateMenu(R.menu.menu_main)
+        }
+
+        // mostrar o PopupMenu programaticamente
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_more -> {
+                    showPopupMenu(toolbar)
+                    true
+                }
+                else -> false
+            }
+        }
+
 
         val i = intent
         val id = i.extras?.getInt("id")
@@ -94,11 +112,11 @@ class ContatoDetalheActivity : AppCompatActivity() {
                 val res = db.atualizarContato(updatedContact)
 
                 if (res > 0) {
-                    Toast.makeText(applicationContext, "Contato atualizado com sucesso.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Contato atualizado com sucesso.", Toast.LENGTH_LONG).show()
                     setResult(RESULT_OK, i)
                     finish()
                 } else {
-                    Toast.makeText(applicationContext, "Erro ao atualizar o contato.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Erro ao atualizar o contato.", Toast.LENGTH_LONG).show()
                 }
             } else {
                 Toast.makeText(applicationContext, "Contato não encontrado.", Toast.LENGTH_SHORT).show()
@@ -110,11 +128,11 @@ class ContatoDetalheActivity : AppCompatActivity() {
         binding.btnDelete.setOnClickListener {
             val res = db.removerContato(contact.id)
             if (res > 0) {
-                Toast.makeText(applicationContext, "Contato removido com sucesso.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Contato removido com sucesso.", Toast.LENGTH_LONG).show()
                 setResult(RESULT_OK, i)
                 finish()
             } else {
-                Toast.makeText(applicationContext, "Erro ao remover o contato.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Erro ao remover o contato.", Toast.LENGTH_LONG).show()
                 setResult(RESULT_CANCELED, i)
                 finish()
             }
@@ -160,7 +178,7 @@ class ContatoDetalheActivity : AppCompatActivity() {
             intent.putExtra(Intent.EXTRA_SUBJECT, "Contato de Patudo")
             intent.putExtra(Intent.EXTRA_TEXT, "Enviado por Patudo app.")
             try {
-                startActivity(Intent.createChooser(intent, "Escolha um aplicativo de email"))
+                startActivity(Intent.createChooser(intent, "Escolha um aplicativo de email."))
             } catch (e: Exception) {
                 Toast.makeText(applicationContext, "Erro ao enviar email.", Toast.LENGTH_SHORT).show()
             }
@@ -184,31 +202,36 @@ class ContatoDetalheActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                // Ação para configurações
-                startActivity(Intent(this, ConfiguracaoActivity::class.java))
-                Toast.makeText(this, "Configurações", Toast.LENGTH_LONG).show()
-                true
+    private fun showPopupMenu(view: View) {
+        //val popupMenu = PopupMenu(this, view)
+        val popupMenu = PopupMenu(this, view, Gravity.END, 0, R.style.CustomPopupMenu)
+        popupMenu.menuInflater.inflate(R.menu.menu_more, popupMenu.menu)
+        popupMenu.setForceShowIcon(true)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_settings -> {
+                    // Ação para configurações
+                    Toast.makeText(this, "Configurações", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, ConfiguracaoActivity::class.java))
+                    true
+                }
+                R.id.action_about -> {
+                    // Ação para sobre
+                    Toast.makeText(this, "Sobre", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, SobreActivity::class.java))
+                    true
+                }
+                R.id.action_logout -> {
+                    // Ação para logout
+                    Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
             }
-
-            R.id.action_about -> {
-                // Ação para sobre
-                startActivity(Intent(this, SobreActivity::class.java))
-                Toast.makeText(this, "Sobre", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            R.id.action_logout -> {
-                // Ação para logout
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
-                Toast.makeText(this, "Logout", Toast.LENGTH_LONG).show()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
         }
+        popupMenu.show()
     }
+
 }
